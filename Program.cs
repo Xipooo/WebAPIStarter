@@ -29,11 +29,7 @@ namespace WebAPIStarter
                 })
                 .ConfigureWebHostDefaults(webBuilder =>
                 {
-                    webBuilder
-                        .Configure(app =>
-                        {
-                            app.Run(context => context.Response.WriteAsync(context.Request.Path));
-                        });
+                    webBuilder.UseStartup<Startup>();
                 })
                 .ConfigureAppConfiguration(config => {
                     config
