@@ -43,7 +43,7 @@ namespace WebAPIStarter
 
             app.UseAuthorization();
 
-            app.UseMvc();
+            // app.UseMvc();
 
             app.UseEndpoints(endpoints =>
             {

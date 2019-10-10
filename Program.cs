@@ -1,3 +1,4 @@
+using System.IO;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -8,6 +9,8 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
+using Microsoft.AspNetCore.Http;
+using System.Net.Http;
 
 namespace WebAPIStarter
 {
@@ -20,9 +23,21 @@ namespace WebAPIStarter
 
         public static IHostBuilder CreateHostBuilder(string[] args) =>
             Host.CreateDefaultBuilder(args)
+                .ConfigureHostConfiguration(configHost => {
+                    configHost.AddJsonFile("config.json")
+                        .AddCommandLine(args);
+                })
                 .ConfigureWebHostDefaults(webBuilder =>
                 {
-                    webBuilder.UseStartup<Startup>();
+                    webBuilder
+                        .Configure(app =>
+                        {
+                            app.Run(context => context.Response.WriteAsync(context.Request.Path));
+                        });
+                })
+                .ConfigureAppConfiguration(config => {
+                    config
+                        .AddJsonFile("config.json", optional: false, reloadOnChange: true);
                 });
     }
 }
