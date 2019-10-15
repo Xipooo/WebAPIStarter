@@ -1,69 +1,69 @@
 using System;
 using System.Collections.Generic;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using WebAPIStarter.Models;
+using WebAPIStarter.Services.CustomerService;
 
 namespace WebAPIStarter.Controllers
 {
     [ApiController]
+    [Route("api/[controller]")]
     public class CustomerController : ControllerBase
     {
-        private List<Customer> customers; 
+        private ICustomerService customerService;
 
-        public CustomerController()
+        public CustomerController(ICustomerService customerService = null)
         {
-            this.customers = new List<Customer> {
-             new Customer { Id = 1, FirstName = "Steve", LastName = "Bishop", Email = "steve.bishop@galvanize.com" },
-             new Customer { Id = 2, FirstName = "Marla", LastName = "Gonzales", Email = "mGone@home.net" },
-             new Customer { Id = 3, FirstName = "Alfred", LastName = "Pennyworth", Email = "alfred@thebatcave.org" }
-         };
+            this.customerService = customerService ?? new InMemoryCustomerService();
         }
 
-        [HttpGet("api/Customer/{id}")]
-        public Customer GetOne(int id) {
-            foreach (Customer customer in this.customers){
-                if (customer.Id == id) {
-                    return customer;
-                }
+        [HttpGet]
+        [Route("{id}")]
+        public IActionResult GetOne([FromRoute] long id)
+        {
+            var result = this.customerService.GetOne(id);
+            if (result != null) return Ok(result);
+            return NotFound();
+        }
+
+        [HttpGet]
+        public IActionResult GetAll()
+        {
+            return Ok(this.customerService.GetAll());
+        }
+
+        [HttpPost("[action]")]
+        public IActionResult Create([FromBody] Customer newCustomer)
+        {
+            if (ModelState.IsValid)
+            {
+                newCustomer = customerService.Add(newCustomer);
+                return CreatedAtAction("GetOne", new { newCustomer.Id }, newCustomer);
             }
-            return null;
+            return base.ValidationProblem();
         }
 
-        [HttpGet("api/Customer")]
-        public List<Customer> GetAll() {
-            return this.customers;
-        }
-
-        [HttpPost("api/Customer")]
-        public string Create() {
-            Customer newCustomer = new Customer {
-                Id = this.customers.Count + 1,
-                FirstName = "John",
-                LastName = "Sonmez",
-                Email = "IDontHaveIt@bigdog.com"
-            };
-            this.customers.Add(newCustomer);
-            return "Created";
-        }
-
-        [HttpPut("api/Customer")]
-        public string Update() {
-            foreach (Customer customer in customers) {
-                if (customer.Id == 1) {
-                    customer.FirstName = "Steven";
-                }
+        [HttpPut("{id}")]
+        [Consumes("application/json")]
+        public IActionResult Update([FromBody] Customer updatedCustomer)
+        {
+            customerService.Update(updatedCustomer);
+            if (customerService.GetOne(updatedCustomer.Id) != null){
+                return NoContent();
             }
-            return "Updated";
+            return NotFound();
         }
 
-        [HttpDelete("api/Customer")]
-        public string Delete() {
-            foreach (Customer customer in customers) {
-                if (customer.Id == 1) {
-                    customers.Remove(customer);
-                }
+        [HttpDelete("{id}")]
+        public IActionResult Delete([FromRoute] long id)
+        {
+            Customer deletedCustomer = customerService.GetOne(id);
+            if (deletedCustomer == null){
+                return NotFound();
             }
-            return "Deleted";
+            customerService.Delete(deletedCustomer);
+            return NoContent();
         }
     }
 }
