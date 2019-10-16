@@ -11,6 +11,7 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
+using WebAPIStarter.Services.CustomerService;
 
 namespace WebAPIStarter
 {
@@ -27,6 +28,8 @@ namespace WebAPIStarter
         public void ConfigureServices(IServiceCollection services)
         {
             services.AddMvc(options => options.EnableEndpointRouting = false);
+            services.AddTransient<ICustomerService, InMemoryCustomerService>();
+            
             // services.AddControllers();
         }
 

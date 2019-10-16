@@ -13,9 +13,9 @@ namespace WebAPIStarter.Controllers
     {
         private ICustomerService customerService;
 
-        public CustomerController(ICustomerService customerService = null)
+        public CustomerController(ICustomerService customerService)
         {
-            this.customerService = customerService ?? new InMemoryCustomerService();
+            this.customerService = customerService;
         }
 
         [HttpGet]
