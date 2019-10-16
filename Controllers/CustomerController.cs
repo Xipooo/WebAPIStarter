@@ -2,7 +2,7 @@ using System;
 using System.Collections.Generic;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
-using WebAPIStarter.Models;
+using WebAPIStarterData.Models;
 using WebAPIStarter.Services.CustomerService;
 
 namespace WebAPIStarter.Controllers
@@ -33,7 +33,7 @@ namespace WebAPIStarter.Controllers
             return Ok(this.customerService.GetAll());
         }
 
-        [HttpPost("[action]")]
+        [HttpPost]
         public IActionResult Create([FromBody] Customer newCustomer)
         {
             if (ModelState.IsValid)

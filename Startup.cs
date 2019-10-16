@@ -7,11 +7,13 @@ using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.HttpsPolicy;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
 using WebAPIStarter.Services.CustomerService;
+using WebAPIStarterData;
 
 namespace WebAPIStarter
 {
@@ -28,8 +30,12 @@ namespace WebAPIStarter
         public void ConfigureServices(IServiceCollection services)
         {
             services.AddMvc(options => options.EnableEndpointRouting = false);
-            services.AddTransient<ICustomerService, InMemoryCustomerService>();
-            
+            services.AddTransient<ICustomerService, InMemoryDatabaseCustomerService>();
+            services.AddDbContext<WebAPIStarterContext>(options =>
+            {
+                options.UseInMemoryDatabase("WebAPIStarter");
+            });
+
             // services.AddControllers();
         }
 

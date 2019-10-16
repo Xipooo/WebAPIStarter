@@ -1,5 +1,5 @@
 using System.Collections.Generic;
-using WebAPIStarter.Models;
+using WebAPIStarterData.Models;
 
 namespace WebAPIStarter.Services.CustomerService
 {
