@@ -103,7 +103,7 @@ namespace WebAPIStarter.Migrations
                 column: "AddressTypeId",
                 principalTable: "AddressTypes",
                 principalColumn: "Id",
-                onDelete: ReferentialAction.Cascade);\
+                onDelete: ReferentialAction.Cascade);
         }
 
         protected override void Down(MigrationBuilder migrationBuilder)
