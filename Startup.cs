@@ -1,3 +1,4 @@
+using System.Linq;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.EntityFrameworkCore;
@@ -41,6 +42,8 @@ namespace WebAPIStarter
             {
                 app.UseDeveloperExceptionPage();
             }
+            
+            new DatabaseSeed(app).Initialize();
             app.UseHttpsRedirection();
             // app.UseRouting();
             app.UseAuthorization();

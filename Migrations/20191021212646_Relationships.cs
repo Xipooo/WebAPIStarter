@@ -108,31 +108,40 @@ namespace WebAPIStarter.Migrations
 
         protected override void Down(MigrationBuilder migrationBuilder)
         {
-            migrationBuilder.DropForeignKey(
-                name: "FK_Addresses_AddressTypes_AddressTypeId",
-                table: "Addresses");
+             if (ActiveProvider == "Microsoft.EntityFrameworkCore.Sqlite")
+            {
+                migrationBuilder.DropTable(name: "Addresses");
+                migrationBuilder.CreateTable(
+                name: "Addresses",
+                columns: table => new
+                {
+                    Id = table.Column<long>(nullable: false)
+                        .Annotation("Sqlite:Autoincrement", true),
+                    Line1 = table.Column<string>(nullable: true),
+                    Line2 = table.Column<string>(nullable: true),
+                    City = table.Column<string>(nullable: true),
+                    StateProvince = table.Column<string>(nullable: true),
+                    Zipcode = table.Column<string>(nullable: true),
+                    Country = table.Column<string>(nullable: true)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_Addresses", x => x.Id);
+                });
+            }
+            else
+            {
+                migrationBuilder.DropForeignKey(
+                    name: "FK_Addresses_AddressTypes_AddressTypeId",
+                    table: "Addresses");
+            }
+            
 
             migrationBuilder.DropTable(
                 name: "AddressTypes");
 
             migrationBuilder.DropTable(
                 name: "CustomerAddress");
-
-            migrationBuilder.DropIndex(
-                name: "IX_Addresses_AddressTypeId",
-                table: "Addresses");
-
-            migrationBuilder.DropColumn(
-                name: "AddressTypeId",
-                table: "Addresses");
-
-            migrationBuilder.AlterColumn<string>(
-                name: "Line1",
-                table: "Addresses",
-                type: "TEXT",
-                nullable: true,
-                oldClrType: typeof(string),
-                oldMaxLength: 100);
         }
     }
 }
