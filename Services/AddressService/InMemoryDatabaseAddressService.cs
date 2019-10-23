@@ -5,7 +5,8 @@ using WebAPIStarterData.Models;
 
 namespace WebAPIStarter.Services.AddressService
 {
-    public class InMemoryDatabaseAddressService
+
+    public class InMemoryDatabaseAddressService : IAddressService
     {
         private WebAPIStarterContext _context;
 
