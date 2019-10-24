@@ -6,11 +6,11 @@ using WebAPIStarterData.Models;
 namespace WebAPIStarter.Services.AddressService
 {
 
-    public class InMemoryDatabaseAddressService : IAddressService
+    public class DatabaseAddressService : IAddressService
     {
         private WebAPIStarterContext _context;
 
-        public InMemoryDatabaseAddressService(WebAPIStarterContext context)
+        public DatabaseAddressService(WebAPIStarterContext context)
         {
             _context = context;
         }
